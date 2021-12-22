@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Iprogrammer-assignment</title>
+
+  <style type="text/css">
+    body {
+        font-size: 14px !important;
+        font-family: "Times New Roman", Times, serif !important;
+    }
+
+    .row {
+        margin-top: 10px;
+    }
+
+    .card {
+        border: 2px solid;
+        padding: 2px;
+        /* margin-left: 2px; */
+        background-color: rgba(46, 64, 83, 0.1);
+        border-radius: 25px;
+        margin-bottom: 15px;
+    }
+
+    caption {
+        font-size: 20px;
+        color: black !important;
+        text-decoration: underline;
+    }
+
+    img {
+        border-radius: 25px;
+    }
+
+    .card:hover {
+        box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+    }
+    table{
+        margin-left: 5px;
+    }
+
+</style>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">IProgrammer-Assignment</h1>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row" id="mycard"></div>
+    </div>
+
+    <div class="container=fluid" >
+        <table class="table" border="1">
+            <!-- <tr style="text-align: center">
+          COMPARISON TABLE
+        </tr> -->
+            <caption class="text-center ">
+                COMPARISON TABLE
+            </caption>
+
+            <thead >
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Title</th>
+                </tr>
+            </thead>
+            <tbody id="mytable"></tbody>
+        </table>
+    </div>
+</body>
+
+
+<script type="text/javascript" charset="utf-8">
+    var url = "https://jsonplaceholder.typicode.com/photos";
+    var newItemList = [];
+    //fetch- For accessing data from API
+    fetch(url)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            //console.log(data);
+            responseData = data;
+            showData(data);
+        });
+
+
+    // showdata - To show API data in html(card)
+    function showData(data) {
+        //console.log(data);
+        var card = document.getElementById("mycard");
+        for (var i = 0; i <= 5; i++) {
+            var item = `<div class="col-sm-4" >
+              <div class="card text-center">
+                    <div class="card-body"  style="padding: 5px">
+                        <img src="${data[i].thumbnailUrl}" alt="image">
+                        <p class="card-text" id="para">${data[i].title}</p>
+                        <h5 class="card-title">${data[i].id}</h5>
+                        <p class="card-text">${data[i].url}</p>
+                        <input onclick="getData(${data[i].id},value)" type="button" class="btn btn-primary" " value="Compare" id="${data[i].id}"></input>
+                        
+                    </div>
+              </div>
+          </div>`;
+
+            card.innerHTML += item;
+        }
+    }
+
+
+    //getData - calls when button is clicked
+    function getData(id, value) {
+        if (value == "remove") {
+            var btn = document.getElementById(id);
+            btn.setAttribute("value", "compare");
+            removeData(id);
+        } else {
+            document.getElementById(id).setAttribute("value", "remove");
+            addData(id);
+        }
+    }
+
+
+    // addData - To add data on click of compare button to display data in table
+    function addData(id) {
+        addItem = responseData.filter((result) => result.id == id);
+        newItemList.push(addItem);
+        //console.log(newItemList)
+        displayData(addItem, id);
+    }
+
+
+    // removeData - To remove data on click of remove button from the table
+    function removeData(id) {
+        //console.log(id)
+        var currentItem = document.querySelector(`.row-${id}`);
+        var parrentItem = document.getElementById("mytable");
+        console.log("parentItem", parrentItem);
+        //  debugger;
+
+        parrentItem?.removeChild(currentItem);
+
+        console.log("this is current item" + currentItem);
+    }
+
+    //console.log(newItemList);
+
+
+    // displayData - To show data into the table
+    function displayData(data, id) {
+        for (var i = 0; i < data.length; i++) {
+            console.log(data.length);
+            var row = `<tr class="row-${id}">
+                             <th><img src="${data[i].thumbnailUrl}" height = "60px",width="60px"></th>
+                                  <td>${data[i].id}</td>
+                                  <td>${data[i].url}</td>
+                                  <td>${data[i].title}</td>
+                          </tr>`;
+        }
+
+        document.getElementById("mytable").innerHTML += row;
+    }
+</script>
+
+
+</html>
